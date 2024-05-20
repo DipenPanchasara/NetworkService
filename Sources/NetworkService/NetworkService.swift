@@ -8,36 +8,36 @@
 import Foundation
 import Combine
 
-protocol NetworkServiceProvider {
+public protocol NetworkServiceProvider {
   func execute<T>(networkRequest: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable
   func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, Error>
   func execute(networkRequest: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, Error>
 }
 
-final class NetworkService: NetworkServiceProvider {
+public final class NetworkService: NetworkServiceProvider {
   private let scheme: String
   private let baseURLString: String
-  private let session: NetworkSessionProvider
+  private let session: NetworkSession
   private let cache: NetworkCacheProvider?
   private let decoder: ResponseDecoderProvider
   private var cancellables = Set<AnyCancellable>()
   private let mapper: MapResponseToNetworkResponseProvider = MapResponseToNetworkResponse()
 
-  init(
+  public init(
     scheme: String,
     baseURLString: String,
-    session: NetworkSessionProvider = NetworkSession.shared,
+    session: NetworkSession,
     cache: NetworkCacheProvider?,
-    decoder: ResponseDecoderProvider = ResponseDecoder()
+    decoder: ResponseDecoderProvider?
   ) {
     self.scheme = scheme
     self.baseURLString = baseURLString
     self.session = session
     self.cache = cache
-    self.decoder = decoder
+    self.decoder = decoder ?? ResponseDecoder()
   }
 
-  func execute<T>(networkRequest: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable  {
+  public func execute<T>(networkRequest: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable  {
     var urlRequest: URLRequest
     do {
       urlRequest = try URLRequestBuilder.build(
@@ -64,7 +64,7 @@ final class NetworkService: NetworkServiceProvider {
       .eraseToAnyPublisher()
   }
   
-  func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, Error> {
+  public func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, Error> {
     var urlRequest: URLRequest
     do {
       urlRequest = try URLRequestBuilder.build(
@@ -91,7 +91,7 @@ final class NetworkService: NetworkServiceProvider {
       .eraseToAnyPublisher()
   }
   
-  func execute(networkRequest: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, any Error> {
+  public func execute(networkRequest: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, any Error> {
     AsyncThrowingStream { continuation in
       var urlRequest: URLRequest
       do {

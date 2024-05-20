@@ -17,7 +17,7 @@ public struct NetworkSession {
   private let configuration: URLSessionConfiguration
   private let session: URLSession
 
-  init(configuration: URLSessionConfiguration) {
+  public init(configuration: URLSessionConfiguration) {
     self.configuration = configuration
     self.session = URLSession(configuration: configuration)
   }
