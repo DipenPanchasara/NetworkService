@@ -8,17 +8,17 @@
 import Combine
 import Foundation
 
-public protocol NetworkCacheProvider {
+public protocol NetworkCacheServiceProvider {
   func cached(urlRequest: URLRequest) -> AnyPublisher<NetworkResponse, any Error>
 }
 
-public struct NetworkCacheManager: NetworkCacheProvider {
+public struct NetworkCacheService: NetworkCacheServiceProvider {
   private let networkSession: NetworkSession
-  
-  init(networkSession: NetworkSession) {
+
+  public init(networkSession: NetworkSession) {
     self.networkSession = networkSession
   }
-  
+
   public func cached(urlRequest: URLRequest) -> AnyPublisher<NetworkResponse, any Error> {
     if let cachedResponse = networkSession.session.configuration.urlCache?.cachedResponse(for: urlRequest) {
       return Just(NetworkResponse(data: cachedResponse.data, response: cachedResponse.response as! HTTPURLResponse))

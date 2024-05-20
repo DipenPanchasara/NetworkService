@@ -18,7 +18,7 @@ public final class NetworkService: NetworkServiceProvider {
   private let scheme: String
   private let baseURLString: String
   private let session: NetworkSession
-  private let cache: NetworkCacheProvider?
+  private let cache: NetworkCacheServiceProvider?
   private let decoder: ResponseDecoderProvider
   private var cancellables = Set<AnyCancellable>()
   private let mapper: MapResponseToNetworkResponseProvider = MapResponseToNetworkResponse()
@@ -27,7 +27,7 @@ public final class NetworkService: NetworkServiceProvider {
     scheme: String,
     baseURLString: String,
     session: NetworkSession,
-    cache: NetworkCacheProvider?,
+    cache: NetworkCacheServiceProvider?,
     decoder: ResponseDecoderProvider?
   ) {
     self.scheme = scheme
