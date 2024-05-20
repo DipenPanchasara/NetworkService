@@ -13,14 +13,14 @@ public protocol NetworkCacheProvider {
 }
 
 public struct NetworkCacheManager: NetworkCacheProvider {
-  private let session: URLSession
+  private let networkSession: NetworkSession
   
-  init(session: URLSession) {
-    self.session = session
+  init(networkSession: NetworkSession) {
+    self.networkSession = networkSession
   }
   
   public func cached(urlRequest: URLRequest) -> AnyPublisher<NetworkResponse, any Error> {
-    if let cachedResponse = session.configuration.urlCache?.cachedResponse(for: urlRequest) {
+    if let cachedResponse = networkSession.session.configuration.urlCache?.cachedResponse(for: urlRequest) {
       return Just(NetworkResponse(data: cachedResponse.data, response: cachedResponse.response as! HTTPURLResponse))
         .setFailureType(to: Error.self)
         .eraseToAnyPublisher()

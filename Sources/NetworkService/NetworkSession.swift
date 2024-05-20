@@ -15,7 +15,7 @@ protocol NetworkSessionProvider: Sendable {
 
 public struct NetworkSession {
   private let configuration: URLSessionConfiguration
-  private let session: URLSession
+  private(set) var session: URLSession
 
   public init(configuration: URLSessionConfiguration) {
     self.configuration = configuration
