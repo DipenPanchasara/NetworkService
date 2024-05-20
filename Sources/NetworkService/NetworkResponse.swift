@@ -9,8 +9,8 @@ import Foundation
 import Combine
 
 public struct NetworkResponse: Equatable {
-  let data: Data?
-  let response: HTTPURLResponse
+  public let data: Data?
+  public let response: HTTPURLResponse
   
   var urlResponse: URLResponse {
     response as URLResponse

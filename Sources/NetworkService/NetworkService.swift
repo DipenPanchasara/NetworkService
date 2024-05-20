@@ -104,16 +104,15 @@ public final class NetworkService: NetworkServiceProvider {
         )
         cache?.cached(urlRequest: urlRequest)
           .sink(receiveCompletion: { completion in
-            print("cache \(completion)")
+            print("executeStream cache completion: \(completion)")
             switch completion {
               case .finished:
-//                continuation.finish()
                 break
               case .failure(let error):
                 continuation.finish(throwing: error)
             }
           }, receiveValue: { response in
-            print("cache \(response)")
+            print("executeStream cache: \(response)")
             continuation.yield(response)
           })
           .store(in: &cancellables)
@@ -122,7 +121,7 @@ public final class NetworkService: NetworkServiceProvider {
             try self.mapper.map(result: $0)
           }
           .sink { completion in
-            print("network \(completion)")
+            print("executeStream network completion: \(completion)")
             switch completion {
               case .finished:
                 continuation.finish()
@@ -130,7 +129,7 @@ public final class NetworkService: NetworkServiceProvider {
                 continuation.finish(throwing: error)
             }
           } receiveValue: { response in
-            print("network \(response)")
+            print("executeStream network: \(response)")
             continuation.yield(response)
           }
           .store(in: &cancellables)
