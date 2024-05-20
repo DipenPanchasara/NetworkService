@@ -25,7 +25,7 @@ struct URLRequestBuilder: URLRequestBuilding {
     var components = URLComponents()
     components.scheme = scheme
     components.host = baseURLString
-    components.path = "/api/json/v1/1/\(endpoint.path)"
+    components.path = endpoint.path
     if let queryItems = endpoint.queryItems {
       components.queryItems = queryItems.map { queryItem in
         URLQueryItem(name: queryItem.key, value: queryItem.value)
