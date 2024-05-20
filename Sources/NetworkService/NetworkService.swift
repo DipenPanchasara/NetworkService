@@ -9,9 +9,9 @@ import Foundation
 import Combine
 
 public protocol NetworkServiceProvider {
-  func execute<T>(networkRequest: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable
-  func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, Error>
-  func execute(networkRequest: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, Error>
+  func executeAndDecode<T>(request: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable
+  func executePublisher(request: NetworkRequest) -> AnyPublisher<NetworkResponse, Error>
+  func executeStream(request: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, Error>
 }
 
 public final class NetworkService: NetworkServiceProvider {
@@ -37,13 +37,13 @@ public final class NetworkService: NetworkServiceProvider {
     self.decoder = decoder ?? ResponseDecoder()
   }
 
-  public func execute<T>(networkRequest: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable  {
+  public func executeAndDecode<T>(request: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable  {
     var urlRequest: URLRequest
     do {
       urlRequest = try URLRequestBuilder.build(
         scheme: scheme,
         baseURLString: baseURLString,
-        networkRequest: networkRequest
+        networkRequest: request
       )
     } catch {
       return Fail(error: URLError(.badURL))
@@ -64,13 +64,13 @@ public final class NetworkService: NetworkServiceProvider {
       .eraseToAnyPublisher()
   }
   
-  public func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, Error> {
+  public func executePublisher(request: NetworkRequest) -> AnyPublisher<NetworkResponse, Error> {
     var urlRequest: URLRequest
     do {
       urlRequest = try URLRequestBuilder.build(
         scheme: scheme,
         baseURLString: baseURLString,
-        networkRequest: networkRequest
+        networkRequest: request
       )
     } catch {
       return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
@@ -91,14 +91,14 @@ public final class NetworkService: NetworkServiceProvider {
       .eraseToAnyPublisher()
   }
   
-  public func execute(networkRequest: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, any Error> {
+  public func executeStream(request: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, any Error> {
     AsyncThrowingStream { continuation in
       var urlRequest: URLRequest
       do {
         urlRequest = try URLRequestBuilder.build(
           scheme: scheme,
           baseURLString: baseURLString,
-          networkRequest: networkRequest
+          networkRequest: request
         )
         cache?.cached(urlRequest: urlRequest)
           .sink(receiveCompletion: { completion in
