@@ -13,9 +13,10 @@ let package = Package(
   ],
   products: [
     // Products define the executables and libraries a package produces, making them visible to other packages.
-    .library(
+    .executable(
       name: packageName,
-      targets: ["NetworkService"]),
+      targets: [packageName]
+    ),
   ],
   targets: [
     .target(name: "NetworkService"),
