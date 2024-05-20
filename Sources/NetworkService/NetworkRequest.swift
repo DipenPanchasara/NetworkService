@@ -8,7 +8,7 @@
 import Foundation
 
 public struct NetworkRequest: Equatable {
-  enum HTTPType: String {
+  public enum HTTPType: String {
     case get
     case post
     case put
@@ -24,7 +24,7 @@ public struct NetworkRequest: Equatable {
   let headers: [String: String]?
   let data: Data?
 
-  init(
+  public init(
     httpMethod: HTTPType,
     endpoint: Endpoint,
     headers: [String: String]? = nil,
