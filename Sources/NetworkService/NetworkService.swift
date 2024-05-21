@@ -9,9 +9,9 @@ import Foundation
 import Combine
 
 public protocol NetworkServiceProvider {
-  func executeAndDecode<T>(request: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable
-  func executePublisher(request: NetworkRequest) -> AnyPublisher<NetworkResponse, Error>
-  func executeStream(request: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, Error>
+  func execute<T>(request: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable
+  func execute(request: NetworkRequest) -> AnyPublisher<NetworkResponse, Error>
+  func execute(request: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, Error>
 }
 
 public final class NetworkService: NetworkServiceProvider {
@@ -37,7 +37,7 @@ public final class NetworkService: NetworkServiceProvider {
     self.decoder = decoder ?? ResponseDecoder()
   }
 
-  public func executeAndDecode<T>(request: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable  {
+  public func execute<T>(request: NetworkRequest) -> AnyPublisher<T, Error> where T: Decodable  {
     var urlRequest: URLRequest
     do {
       urlRequest = try URLRequestBuilder.build(
@@ -64,7 +64,7 @@ public final class NetworkService: NetworkServiceProvider {
       .eraseToAnyPublisher()
   }
   
-  public func executePublisher(request: NetworkRequest) -> AnyPublisher<NetworkResponse, Error> {
+  public func execute(request: NetworkRequest) -> AnyPublisher<NetworkResponse, Error> {
     var urlRequest: URLRequest
     do {
       urlRequest = try URLRequestBuilder.build(
@@ -93,7 +93,7 @@ public final class NetworkService: NetworkServiceProvider {
       .eraseToAnyPublisher()
   }
   
-  public func executeStream(request: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, any Error> {
+  public func execute(request: NetworkRequest) -> AsyncThrowingStream<NetworkResponse, any Error> {
     AsyncThrowingStream { continuation in
       var urlRequest: URLRequest
       do {
