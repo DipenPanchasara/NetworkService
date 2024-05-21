@@ -136,6 +136,10 @@ public final class NetworkService: NetworkServiceProvider {
       } catch {
         continuation.finish(throwing: URLError(.badURL))
       }
+      
+      continuation.onTermination = { @Sendable value in
+        print("stream terminated. \(value)")
+      }
     }
   }
 }
